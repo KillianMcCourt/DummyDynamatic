@@ -84,7 +84,8 @@ All timing information relative to the operators is stored in the [components JS
         "VD": 0
       }
     }
-  }```
+  }*
+```
 
 
 The latency is listed as a function of the (integer) bitwidth.
@@ -92,6 +93,8 @@ The operator delay is also given as a function of bitwidth. Valid and ready dela
 
 
 ## How this information is used
+
+Timing information is currently primarily required during the buffer placement stage, which ensures the paths through the system are correct. The basic "on-merge" buffer placement algorithm is not timing-aware, and does not make use of it; but both supported MILP algorithms (fpga20 and flp22) do. For this, the information is extracted from the JSON, and stored into dedicated timing structures. These are covered in detail in the following section.
 
 # Implementation details & codebase examples
 
