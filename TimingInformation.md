@@ -1,6 +1,6 @@
 # Timing Information and its handling in Dynamatic
 
-This document aims to present all essential information relating to the component timing information, in order to document existing code and ease future implementations which would affect it.
+This document aims to present all essential information relating to the component timing information, in order to document existing code and ease future implementations which would affect it. For concision and readability, pseudo-code is preferred throughout - links to the implementations are systematically provided for the advanced reader.
 
 # High-level overview
 
@@ -111,7 +111,8 @@ During a pass requiring timing data, such as buffer placement, a [TimingDatabase
 TimingDatabase has a number of internal functions, which can be organised into two categories : the getters, which are called on some Op known to be inside the Database, and which will extract the information from the corresponding TimingModel; and the construction function insertTimingModel, which takes a instanciated TimingModel and adds it into the TimingDatabase.
 
 
-Within a TimingModel, most fields are directly stored as double,  bitwidth-dependant datafields may have several values for a given operator, and are stored in a custom struct, [BitwidthDepmetric](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L46). This struct then in turn has a data field, which contains the map of these differen values, as well as a getCeilMetric function, which serves to extract the value corresponding to a given bitwidth. In order to be callable without prior knowledge of the bitwidth, this function is overloaded; with on version taking the Op as argument, obtaining the assocaited bitwidth, and calling the second overload, which is the version inside BitwidthDepMetric we already mentionned.
+Within a TimingModel, most fields are directly stored as double,  bitwidth-dependant datafields may have several values for a given operator, and are stored in a custom struct, [BitwidthDepMetric](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L46). This struct then in turn has a data field, which contains the map of these differen values, as well as a getCeilMetric function, which serves to extract the value corresponding to a given bitwidth. In order to be callable without prior knowledge of the bitwidth, this function is overloaded; with on version taking the Op as argument, obtaining the assocaited bitwidth, and calling the second overload, which is the version inside BitwidthDepMetric we already mentionned. Of note is that BitwidthDepMetric's data type can be specified freely (and could be maps or complex structs), though the current code only uses on doubles. 
+
 
 
 
@@ -119,7 +120,74 @@ Within a TimingModel, most fields are directly stored as double,  bitwidth-depen
 
 ## JSON Deserialisation
 
-This process is initialised by a call to  fromJSON(const llvm::json::Value &jsonValue, TimingDatabase &timingDB,
-              llvm::json::Path path);
+**The following is a detailed, sequential description of all the relevant steps and functions which build a usable TimingDatabase.**
 
+This process can be summarized as follows :
+1 - A TimingDatabase is instanciated, and context passed to it with the MLIRContext getContext function.
+2 - readFromJSON is called. this function takes two arguments : the path to the JSON, as (passed as a reference) the instanciated TimindDatabase.  
+
+It's operation can be summarised with the following pseudo-code 
+
+```
+function readFromJSON(jsonPath, timingDB):
+    open inputFile at jsonPath
+    if open fails:
+        log error
+        return failure
+
+    read all lines from inputFile into a jsonString
+
+    parse jsonString into JSON value
+    if parse fails:
+        log error
+        return failure
+
+    call fromJSON with parsed value and timingDB
+    if fromJSON fails:
+        return failure
+
+    return success
+    ```
+
+This in turn involves fromJSON. This name is shared by a large number of overloads, in this case it is [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373). Note that the entire component JSON is parsed and passed, not just the relevant operations. 
+
+3- This fromJSON takes the passed JSON content, and reads it key by key, interpreting each key as an Op. it then instantiates for each a TimingModel, and calls a second overload of [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L330), which will fill this model's data. Finally, it inserts the model into the general TimingDatabase.
+
+4 - The aforementioned second overload of fromJSON can be described with the following pseudo-code :
+
+```
+function fromJSON(value, model, path):
+    if value is not an object:
+        report error via path
+        return false
+
+    // Deserialize scalar fields via deserializeNested
+    for each key in [LATENCY, DELAY, DELAY_VALID, DELAY_READY, 
+                     DELAY_VR, DELAY_CV, DELAY_CR, DELAY_VC, DELAY_VD]:
+        if deserializeNested(key, object, corresponding model field, path) fails:
+            return false
+
+    // Deserialize input ports model
+    if "inport" exists in object:
+        if fromJSON(value["inport"], model.inputModel, path.field("inport")) fails:
+            return false
+    else:
+        report error via path
+        return false
+
+    // Deserialize output ports model
+    if "outport" exists in object:
+        if fromJSON(value["outport"], model.outputModel, path.field("outport")) fails:
+            return false
+    else:
+        report error via path
+        return false
+
+    return true
+    ```
+This fromJSON calls deserializeNested on a fixed list of fields, defined seperately as a list of keys for the JSON; for instance ```DELAY_VALID[] = {"delay", "valid", "1"}```. These match the expected structure of the JSON data, and will be used to extract the appropriate information. The reader wll notice that another fromJSON is called : this third overload of [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L314), used on the portModels, simply calls deserializeNested on the elements of the portModel, and will not be discussed independantly as the operating logic is identical to the main case.
+
+5 - 
+
+    
 
