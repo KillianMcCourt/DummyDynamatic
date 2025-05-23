@@ -98,15 +98,28 @@ Timing information is currently primarily required during the buffer placement s
 
 # Implementation 
 
-## Timing Structures
+## Timing Structures 
 
-Consider the following representation : 
+### Storage
+
+Consider the following representation of the stored data : 
 
 ![image](https://github.com/user-attachments/assets/50d75d46-ea0e-4300-a354-60aaa7ed8754)
 
-During a pass requiring timing data, such as buffer placement, a [TimingDatabase](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L174) is instanciated. This is the top-level class, which contains all timing data of the entire IR. It is initially empty and is then filled (see next section) with instances of the [TimingModel](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L103) struct. Each instance of this struct is associated to a single Op of the IR, and contains all the data relative to this Op. 
+During a pass requiring timing data, such as buffer placement, a [TimingDatabase](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L174) is instanciated. This is the top-level class, which contains all timing data of the entire IR. It is initially empty and is then filled (see next section) with instances of the [TimingModel](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L103) struct. Each instance of this struct is associated to a single Op of the IR, and contains all the data relative to this Op.
+
+TimingDatabase has a number of internal functions, which can be organised into two categories : the getters, which are called on some Op known to be inside the Database, and which will extract the information from the corresponding TimingModel; and the construction function insertTimingModel, which takes a instanciated TimingModel and adds it into the TimingDatabase.
+
+
+Within a TimingModel, most fields are directly stored as double,  bitwidth-dependant datafields may have several values for a given operator, and are stored in a custom struct, [BitwidthDepmetric](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L46). This struct then in turn has a data field, which contains the map of these differen values, as well as a getCeilMetric function, which serves to extract the value corresponding to a given bitwidth. In order to be callable without prior knowledge of the bitwidth, this function is overloaded; with on version taking the Op as argument, obtaining the assocaited bitwidth, and calling the second overload, which is the version inside BitwidthDepMetric we already mentionned.
+
+
+
+
 
 ## JSON Deserialisation
 
+This process is initialised by a call to  fromJSON(const llvm::json::Value &jsonValue, TimingDatabase &timingDB,
+              llvm::json::Path path);
 
 
