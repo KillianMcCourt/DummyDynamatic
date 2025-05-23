@@ -94,7 +94,19 @@ The operator delay is also given as a function of bitwidth. Valid and ready dela
 
 ## How this information is used
 
-Timing information is currently primarily required during the buffer placement stage, which ensures the paths through the system are correct. The basic "on-merge" buffer placement algorithm is not timing-aware, and does not make use of it; but both supported MILP algorithms (fpga20 and flp22) do. For this, the information is extracted from the JSON, and stored into dedicated timing structures. These are covered in detail in the following section.
+Timing information is currently primarily required during the buffer placement stage, which ensures the paths through the system are correct. The basic "on-merge" buffer placement algorithm is not timing-aware, and does not make use of it; but both supported MILP algorithms (fpga20 and flp22) do. For this, the information is extracted from the JSON, and stored into dedicated timing structures, from which they will be read. These are covered in detail in the following section.
 
-# Implementation details & codebase examples
+# Implementation 
+
+## Timing Structures
+
+Consider the following representation : 
+
+![image](https://github.com/user-attachments/assets/50d75d46-ea0e-4300-a354-60aaa7ed8754)
+
+During a pass requiring timing data, such as buffer placement, a [TimingDatabase](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L174) is instanciated. This is the top-level class, which contains all timing data of the entire IR. It is initially empty and is then filled (see next section) with instances of the [TimingModel](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L103) struct. Each instance of this struct is associated to a single Op of the IR, and contains all the data relative to this Op. 
+
+## JSON Deserialisation
+
+
 
