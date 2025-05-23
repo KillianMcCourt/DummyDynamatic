@@ -20,7 +20,7 @@ In order to realise a hardware circuit capable of functioning correctly, it is n
 
 ## How this information is stored
 
-All timing information relative to the operators is stored in the [components JSON]((https://github.com/EPFL-LAP/dynamatic/blob/main/data/components.json). A sample element is listed as
+All timing information relative to the operators is stored in the [components JSON](https://github.com/EPFL-LAP/dynamatic/blob/main/data/components.json). A sample element is listed as
 
 ``` "handshake.addi": {
     "latency": {
