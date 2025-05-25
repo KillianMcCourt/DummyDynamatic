@@ -1,6 +1,6 @@
 # Timing Information and its handling in Dynamatic
 
-This document aims to present all essential information relating to the component timing information, in order to document existing code and ease future implementations which would affect it. For concision and readability, pseudo-code is preferred throughout - links to the implementations are systematically provided for the advanced reader.
+This document aims to present all essential information relating to the component timing information, in order to document existing code and ease future implementations which would affect it. For concision and readability, pseudo-code is used throughout - links to the implementations are systematically provided for the advanced reader.
 
 # High-level overview
 
