@@ -1,4 +1,4 @@
-# Timing Information and its handling in Dynamatic
+th# Timing Information and its handling in Dynamatic
 
 This document aims to present all essential information relating to the component timing information, in order to document existing code and ease future implementations which would affect it. For concision and readability, pseudo-code is used throughout - links to the implementations are systematically provided for the advanced reader.
 
@@ -148,8 +148,7 @@ function readFromJSON(jsonPath, timingDB):
     if fromJSON fails:
         return failure
 
-    return success
-    ```
+    return success ```
 
 This in turn involves fromJSON. This name is shared by a large number of overloads, in this case it is [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373). Note that the entire component JSON is parsed and passed, not just the relevant operations. 
 
