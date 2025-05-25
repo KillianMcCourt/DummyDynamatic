@@ -113,6 +113,8 @@ TimingDatabase has a number of internal functions, which can be organised into t
 
 Within a TimingModel, most fields are directly stored as double,  bitwidth-dependant datafields may have several values for a given operator, and are stored in a custom struct, [BitwidthDepMetric](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L46). This struct then in turn has a data field, which contains the map of these differen values, as well as a getCeilMetric function, which serves to extract the value corresponding to a given bitwidth. In order to be callable without prior knowledge of the bitwidth, this function is overloaded; with on version taking the Op as argument, obtaining the assocaited bitwidth, and calling the second overload, which is the version inside BitwidthDepMetric we already mentionned. Of note is that BitwidthDepMetric's data type can be specified freely (and could be maps or complex structs), though the current code only uses on doubles. 
 
+TimingModels can also contain a nested struct PortModel, which is designed to contain the dataDelay, validDelay and readDelay of the Op's input or ouput port. 
+
 
 
 
@@ -217,7 +219,7 @@ The TimingDatabase aims to make available the information stored in components.j
 
 -**[getInternalDelay](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L143)** likewise shares the same logic, but ignores the nested PortModel structures and only returns the internal data.
 
--**[getLatency]([getLatency](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114)** targets a bitwidth dependant field, and therefore also relies on getCeilMetric to return the correct value. Two things to note : if the signalType is data, latency is 0 because no information is available for valid and ready signals; if the op is identified as an LSQ, latency is incremented by 3 cycles before being returned because LSQ has roughly 3 extra cycles of latency on loads compared to an MC.
+-**[getLatency](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114)** targets a bitwidth dependant field, and therefore also relies on getCeilMetric to return the correct value. Two things to note : if the signalType is data, latency is 0 because no information is available for valid and ready signals; if the op is identified as an LSQ, latency is incremented by 3 cycles before being returned because LSQ has roughly 3 extra cycles of latency on loads compared to an MC.
 
 
 
