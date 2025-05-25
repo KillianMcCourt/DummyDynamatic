@@ -215,9 +215,9 @@ The TimingDatabase aims to make available the information stored in components.j
 
 -**[getPortDelay](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L161)** follows the exact same logic, but simply operates on the nested PortModel, and returns as dataDelay only that of the nested PortModel.
 
-- **[getInternalDelay](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L143)** likewise shares the same logic, but ignores the nested PortModel structures and only returns the internal data.
+-**[getInternalDelay](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L143)** likewise shares the same logic, but ignores the nested PortModel structures and only returns the internal data.
 
-- **[getLatency]([getLatency](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114))** targets a bitwidth dependant field, and therefore also relies on getCeilMetric to return the correct value. Two things to note : if the signalType is data, latency is 0 because no information is available for valid and ready signals; if the op is identified as an LSQ, latency is incremented by 3 cycles before being returned because LSQ has roughly 3 extra cycles of latency on loads compared to an MC.
+-**[getLatency]([getLatency](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114)** targets a bitwidth dependant field, and therefore also relies on getCeilMetric to return the correct value. Two things to note : if the signalType is data, latency is 0 because no information is available for valid and ready signals; if the op is identified as an LSQ, latency is incremented by 3 cycles before being returned because LSQ has roughly 3 extra cycles of latency on loads compared to an MC.
 
 
 
