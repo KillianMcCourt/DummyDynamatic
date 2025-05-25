@@ -185,9 +185,36 @@ function fromJSON(value, model, path):
 
     return true
     ```
-This fromJSON calls deserializeNested on a fixed list of fields, defined seperately as a list of keys for the JSON; for instance ```DELAY_VALID[] = {"delay", "valid", "1"}```. These match the expected structure of the JSON data, and will be used to extract the appropriate information. The reader wll notice that another fromJSON is called : this third overload of [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L314), used on the portModels, simply calls deserializeNested on the elements of the portModel, and will not be discussed independantly as the operating logic is identical to the main case.
+This fromJSON calls deserializeNested on an desired "out" (the target field of TimingModel) and a fixed list of fields, defined seperately as a list of keys for the JSON; for instance ```DELAY_VALID[] = {"delay", "valid", "1"}```. These match the expected structure of the JSON data, and will be used to extract the appropriate information. The reader wll notice that another fromJSON is called : this third overload of [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L314), used on the portModels, simply calls deserializeNested on the elements of the portModel, and will not be discussed independantly as the operating logic is identical to the main case.
 
-5 - 
+5 - [deserializeNested](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L256) iterates over the provided list of keys in order to navigate depth-wise the JSON file. Once it reaches the end of the provided list, it then calls fromJSON, taking as arguments both the target out and the built path to the data through the JSON. As we established earlier, since several types exist for fields of TimingModel, this fromJSON could be one of several overloads -currently two are in use, one for doubles, and one for BitwidthDepMetric<double>; the first is from JSON.h and simply reads back the value found; the second has the following pseudo-code
 
-    
+```
+function fromJSON(value, metric, path):
+    object = getObjectFromValue(value)
+    if object is null:
+        reportError(path, "expected JSON object")
+        return false
+
+    for each (key, value) in object:
+        bitwidth = parseBitwidthFromKey(key)
+        if parsing failed:
+            reportError(path.field(key))
+            return false
+
+        dataValue = parseDataValue(value)
+        if parsing failed:
+            reportError(path.field(key))
+            return false
+
+        metric.data[bitwidth] = dataValue
+
+    return true
+```
+
+Essentially, it iterates over the found array of values, and writes them one by one into the data field of the BitwidthDepMetric. 
+
+
+**We have now completed the timing information extraction : we have initialised a TimingDatabase, available to the functions requiring it; we have populated it with TimingModels for all Ops; and we have filled all the fields of these timingModels."
+
 
