@@ -205,6 +205,20 @@ function fromJSON(value, metric, path):
 Essentially, it iterates over the found array of values, and writes them one by one into the data field of the BitwidthDepMetric. 
 
 
-**We have now completed the timing information extraction : we have initialised a TimingDatabase, available to the functions requiring it; we have populated it with TimingModels for all Ops; and we have filled all the fields of these timingModels."
+**We have now completed the timing information extraction** : we have initialised a TimingDatabase, available to the functions requiring it; we have populated it with TimingModels for all Ops; and we have filled all the fields of these timingModels." 
+
+## Using the TimingDatabase
+
+The TimingDatabase aims to make available the information stored in components.json. This is done using one of five getters, which are called on an Op and a signalType : getModel, getLatency, getInternalDelay, getPortDelay, getTotalDelay; which respectively pass back a TimingModel, or a double containing the approriate field for the Op. getModel simply finds the name corresponding to the requested Op, and then calls a second getModel which finds the TimingModel corresponding to the name in the database, and returns it; the other getters all first call [getModel]([getModel](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L103), and then extract the information from the model's fields.
+
+-**[getTotalDelay](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L183)** selects, based off the SignalType, a second getter from {getTotalDataDelay, getTotalValidDelay, getTotalReadyDelay}. getTotalValidDelay and getTotalReadyDelay are internal functions of the model, and directly read and pass back the sum of the relevant fields. However, getTotalDataDelay is bitwidth dependant, and extra logic is required to select the correct value: The field is of type BitwidthDepMetric, therefore we pass desired bitwidth to it's getCeilMetric. This is done for dataDelay of the op, as well as of the nested PortModels, inputModel and outputModel, the results finally being summed.
+
+-**[getPortDelay](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L161)** follows the exact same logic, but simply operates on the nested PortModel, and returns as dataDelay only that of the nested PortModel.
+
+- **[getInternalDelay](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L143)** likewise shares the same logic, but ignores the nested PortModel structures and only returns the internal data.
+
+- **[getLatency]([getLatency](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114))** targets a bitwidth dependant field, and therefore also relies on getCeilMetric to return the correct value. Two things to note : if the signalType is data, latency is 0 because no information is available for valid and ready signals; if the op is identified as an LSQ, latency is incremented by 3 cycles before being returned because LSQ has roughly 3 extra cycles of latency on loads compared to an MC.
+
+
 
 
