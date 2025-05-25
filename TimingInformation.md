@@ -148,7 +148,8 @@ function readFromJSON(jsonPath, timingDB):
     if fromJSON fails:
         return failure
 
-    return success ```
+    return success
+```
 
 This in turn involves fromJSON. This name is shared by a large number of overloads, in this case it is [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373). Note that the entire component JSON is parsed and passed, not just the relevant operations. 
 
