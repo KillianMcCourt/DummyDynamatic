@@ -25,7 +25,6 @@ All timing information lives in the [components JSON file](https://github.com/EP
     },
     "delay": {
       "data": {
-        "1": 1.397,
         "32": 2.287,
         "64": 2.767
       },
@@ -38,7 +37,7 @@ All timing information lives in the [components JSON file](https://github.com/EP
       "VR": 1.409,
       "CV": 0
     },
-    "inport": { /* port-specific delays */ },
+    "inport": { /* port-specific delays, structured like the delay set above */ },
     "outport": { /* port-specific delays */ }
   }
 }
@@ -70,8 +69,10 @@ The timing system uses a two-level hierarchy:
 - Uses BitwidthDepMetric for bitwidth-dependent values
 - Contains nested PortModel structures for input/output timing
 
+- TimingModels must handle bitwidth-dependent data. FOr this, a specific struc is used :
+
 **BitwidthDepMetric**: Handles bitwidth-dependent timing values
-- Maps bitwidths to timing values (e.g., 32-bit → 2.287μs)
+- Maps bitwidths to latency values (e.g., 32-bit → 9 cycles)
 - Provides getCeilMetric() to find the right value for a given bitwidth
 
 ## Loading Timing Data from JSON
@@ -99,11 +100,6 @@ The TimingDatabase provides several getter methods:
 
 These methods automatically handle bitwidth lookup and return the appropriate timing value for the requested operation and signal type.
 
-## Special Cases
-
-**LSQ Operations**: Load-store queue operations get an additional 3 cycles of latency beyond their base timing due to memory access overhead.
-
-**Signal Types**: Data signals use bitwidth-dependent timing, while valid/ready signals typically use fixed values regardless of data width.
 
 ---
 
