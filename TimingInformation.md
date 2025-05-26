@@ -126,8 +126,17 @@ TimingModels can also contain a nested struct PortModel, which is designed to co
 
 This process can be summarized as follows :
 
-### 1 - A TimingDatabase is instanciated, and context passed to it with the MLIRContext getContext function.
-### 2 - readFromJSON is called. this function takes two arguments : the path to the JSON, as (passed as a reference) the instanciated TimindDatabase.  
+### 1 -
+A TimingDatabase is instanciated, and context passed to it with the MLIRContext getContext function.
+Typical code to do this is :
+
+```  TimingDatabase timingDB(&getContext());
+  if (failed(TimingDatabase::readFromJSON(timingModels, timingDB)))
+    return failure();
+```
+
+### 2 -
+readFromJSON is called. this function takes two arguments : the path to the JSON, as (passed as a reference) the instanciated TimindDatabase.  
 
 It's operation can be summarised with the following pseudo-code 
 
@@ -154,9 +163,12 @@ function readFromJSON(jsonPath, timingDB):
 
 This in turn involves fromJSON. This name is shared by a large number of overloads, in this case it is [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373). Note that the entire component JSON is parsed and passed, not just the relevant operations. 
 
-### 3- This fromJSON takes the passed JSON content, and reads it key by key, interpreting each key as an Op. it then instantiates for each a TimingModel, and calls a second overload of [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L330), which will fill this model's data. Finally, it inserts the model into the general TimingDatabase.
+### 3-
 
-### 4 - The aforementioned second overload of fromJSON can be described with the following pseudo-code :
+This fromJSON takes the passed JSON content, and reads it key by key, interpreting each key as an Op. it then instantiates for each a TimingModel, and calls a second overload of [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L330), which will fill this model's data. Finally, it inserts the model into the general TimingDatabase.
+
+### 4 - 
+The aforementioned second overload of fromJSON can be described with the following pseudo-code :
 
 ```
 function fromJSON(value, model, path):
@@ -190,7 +202,8 @@ function fromJSON(value, model, path):
 ```
 This fromJSON calls deserializeNested on an desired "out" (the target field of TimingModel) and a fixed list of fields, defined seperately as a list of keys for the JSON; for instance ```DELAY_VALID[] = {"delay", "valid", "1"}```. These match the expected structure of the JSON data, and will be used to extract the appropriate information. The reader wll notice that another fromJSON is called : this third overload of [fromJSON](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L314), used on the portModels, simply calls deserializeNested on the elements of the portModel, and will not be discussed independantly as the operating logic is identical to the main case.
 
-### 5 - [deserializeNested](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L256) iterates over the provided list of keys in order to navigate depth-wise the JSON file. Once it reaches the end of the provided list, it then calls fromJSON, taking as arguments both the target out and the built path to the data through the JSON. As we established earlier, since several types exist for fields of TimingModel, this fromJSON could be one of several overloads -currently two are in use, [one](/dynamatic/polygeist/llvm-project/llvm/include/llvm/Support/JSON.h) for doubles, and [one](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L283) for BitwidthDepMetric<double>; the first is from JSON.h and simply reads back the value found; the second has the following pseudo-code
+### 5 -
+[deserializeNested](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L256) iterates over the provided list of keys in order to navigate depth-wise the JSON file. Once it reaches the end of the provided list, it then calls fromJSON, taking as arguments both the target out and the built path to the data through the JSON. As we established earlier, since several types exist for fields of TimingModel, this fromJSON could be one of several overloads -currently two are in use, [one](/dynamatic/polygeist/llvm-project/llvm/include/llvm/Support/JSON.h) for doubles, and [one](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L283) for BitwidthDepMetric<double>; the first is from JSON.h and simply reads back the value found; the second has the following pseudo-code
 
 
 ```
