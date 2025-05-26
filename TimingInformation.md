@@ -23,6 +23,10 @@ In order to realise a hardware circuit capable of functioning correctly, it is n
 All timing information relative to the operators used in Dynamatic is stored in the [components JSON](https://github.com/EPFL-LAP/dynamatic/blob/main/data/components.json). A sample element is listed as
 
 
+<details>
+<summary>Click to view JSON data</summary>
+
+```json
 {
   "handshake.addi": {
     "latency": {
@@ -88,6 +92,8 @@ All timing information relative to the operators used in Dynamatic is stored in 
     }
   }
 }
+</details>
+```
 
 
 The latency is listed as a function of the (integer) bitwidth.
