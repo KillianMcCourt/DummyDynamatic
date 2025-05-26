@@ -22,76 +22,79 @@ In order to realise a hardware circuit capable of functioning correctly, it is n
 
 All timing information relative to the operators used in Dynamatic is stored in the [components JSON](https://github.com/EPFL-LAP/dynamatic/blob/main/data/components.json). A sample element is listed as
 
-<div style="overflow-x: auto;">
 
 <div style="overflow-y: auto; max-height: 240px; border: 1px solid #ddd; padding: 8px; border-radius: 6px;">
 
 ```json
-"handshake.addi": {
-  "latency": {
-    "64": 0.0
-  },
-  "delay": {
-    "data": {
-      "1": 1.397,
-      "2": 1.397,
-      "4": 2.038,
-      "8": 1.927,
-      "16": 2.047,
-      "32": 2.287,
-      "64": 2.767
+{
+  "handshake.addi": {
+    "latency": {
+      "64": 0.0
     },
-    "valid": {
-      "1": 1.397
-    },
-    "ready": {
-      "1": 1.4
-    },
-    "VR": 1.409,
-    "CV": 0,
-    "CR": 0,
-    "VC": 0,
-    "VD": 0
-  },
-  "inport": {
     "delay": {
       "data": {
-        "64": 0
+        "1": 1.397,
+        "2": 1.397,
+        "4": 2.038,
+        "8": 1.927,
+        "16": 2.047,
+        "32": 2.287,
+        "64": 2.767
       },
       "valid": {
-        "1": 0
+        "1": 1.397
       },
       "ready": {
-        "1": 0
+        "1": 1.4
       },
-      "VR": 0,
+      "VR": 1.409,
       "CV": 0,
       "CR": 0,
       "VC": 0,
       "VD": 0
-    }
-  },
-  "outport": {
-    "delay": {
-      "data": {
-        "64": 0
-      },
-      "valid": {
-        "1": 0
-      },
-      "ready": {
-        "1": 0
-      },
-      "VR": 0,
-      "CV": 0,
-      "CR": 0,
-      "VC": 0,
-      "VD": 0
+    },
+    "inport": {
+      "delay": {
+        "data": {
+          "64": 0
+        },
+        "valid": {
+          "1": 0
+        },
+        "ready": {
+          "1": 0
+        },
+        "VR": 0,
+        "CV": 0,
+        "CR": 0,
+        "VC": 0,
+        "VD": 0
+      }
+    },
+    "outport": {
+      "delay": {
+        "data": {
+          "64": 0
+        },
+        "valid": {
+          "1": 0
+        },
+        "ready": {
+          "1": 0
+        },
+        "VR": 0,
+        "CV": 0,
+        "CR": 0,
+        "VC": 0,
+        "VD": 0
+      }
     }
   }
 }
+```
 
-</div> ```
+</div>
+
 
 The latency is listed as a function of the (integer) bitwidth.
 The operator delay is also given as a function of bitwidth. Valid and ready delays are listed seperately, as are the signal arrival order dependency delays. Delay information for inports and outports is in a seperate section, with the same organisation.
