@@ -24,6 +24,7 @@ All timing information relative to the operators used in Dynamatic is stored in 
 
 
 <details>
+ 
 <summary>Click to view JSON data</summary>
 
 ```json
@@ -93,6 +94,7 @@ All timing information relative to the operators used in Dynamatic is stored in 
   }
 }
 </details>
+
 ```
 
 
