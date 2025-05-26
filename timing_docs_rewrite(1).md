@@ -82,7 +82,7 @@ The process follows these steps:
 2. **File Reading**: Parse the entire components.json file
 3. **Data Extraction**: For each operator in the JSON:
    - Create a TimingModel instance
-   - Extract latency, delay, and port timing data
+   - Extract latency, delay, and port timing data, with recursive calls to an overloaded fromJSON function
    - Handle bitwidth-dependent values appropriately
    - Insert the completed model into the TimingDatabase
 
