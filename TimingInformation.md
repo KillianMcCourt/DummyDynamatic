@@ -24,9 +24,7 @@ All timing information relative to the operators used in Dynamatic is stored in 
 
 
 <div style="overflow-y: auto; max-height: 240px; border: 1px solid #ddd; padding: 8px; border-radius: 6px;">
-
-```json
-{
+<pre style="margin: 0; white-space: pre-wrap;">{
   "handshake.addi": {
     "latency": {
       "64": 0.0
@@ -90,9 +88,7 @@ All timing information relative to the operators used in Dynamatic is stored in 
       }
     }
   }
-}
-```
-
+}</pre>
 </div>
 
 
