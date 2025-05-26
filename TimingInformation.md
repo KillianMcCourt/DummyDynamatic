@@ -24,6 +24,8 @@ All timing information relative to the operators used in Dynamatic is stored in 
 
 <div style="overflow-x: auto;">
 
+<div style="overflow-y: auto; max-height: 240px; border: 1px solid #ddd; padding: 8px; border-radius: 6px;">
+
 ```json
 "handshake.addi": {
   "latency": {
@@ -89,7 +91,7 @@ All timing information relative to the operators used in Dynamatic is stored in 
   }
 }
 
-</div> ``` 
+</div> ```
 
 The latency is listed as a function of the (integer) bitwidth.
 The operator delay is also given as a function of bitwidth. Valid and ready delays are listed seperately, as are the signal arrival order dependency delays. Delay information for inports and outports is in a seperate section, with the same organisation.
