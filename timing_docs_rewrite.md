@@ -42,10 +42,6 @@ All timing information is stored in `data/components.json`. Here's a simplified 
       "ready": {
         "1": 1.4
       }
-    },
-    "inport": { /* port-specific delays */ },
-    "outport": { /* port-specific delays */ }
-  }
 }
 ```
 
