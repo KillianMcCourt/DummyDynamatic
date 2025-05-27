@@ -59,19 +59,19 @@ Timing data is primarily used during **buffer placement**, which ensures correct
 
 The timing system uses a two-level hierarchy:
 
-**TimingDatabase**: Top-level container holding timing data for the entire IR
+**[TimingDatabase](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L174)**: Top-level container holding timing data for the entire IR
 - Stores multiple TimingModel instances
 - Provides getter methods to extract timing information
 - Gets populated from the JSON file during buffer placement passes
 
-**TimingModel**: Contains all timing data for a single operation
+**[TimingModel](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L103)**: Contains all timing data for a single operation
 - Stores latency, delays, and port information
 - Uses BitwidthDepMetric for bitwidth-dependent values
 - Contains nested PortModel structures for input/output timing
 
 - TimingModels must handle bitwidth-dependent data. FOr this, a specific struc is used :
 
-**BitwidthDepMetric**: Handles bitwidth-dependent timing values
+**[BitwidthDepMetric](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L46)**: Handles bitwidth-dependent timing values
 - Maps bitwidths to latency values (e.g., 32-bit → 9 cycles)
 - Provides getCeilMetric() to find the right value for a given bitwidth
 
@@ -93,7 +93,7 @@ The JSON parsing handles the nested structure automatically, converting string k
 
 The TimingDatabase provides several getter methods:
 
-- **getLatency()**: Returns cycle count for an operation
+- **[getLatency()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114)**: Returns cycle count for an operation
 - **getInternalDelay()**: Gets processing delay excluding ports
 - **getPortDelay()**: Gets delay for specific input/output ports  
 - **getTotalDelay()**: Sums all relevant delays for an operation path
