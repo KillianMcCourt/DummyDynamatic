@@ -69,7 +69,7 @@ The timing system uses a two-level hierarchy:
 - Uses BitwidthDepMetric for bitwidth-dependent values
 - Contains nested PortModel structures for input/output timing
 
-- TimingModels must handle bitwidth-dependent data. FOr this, a specific struc is used :
+- TimingModels must handle bitwidth-dependent data. For this, a specific struc is used :
 
 **[BitwidthDepMetric](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L46)**: Handles bitwidth-dependent timing values
 - Maps bitwidths to latency values (e.g., 32-bit → 9 cycles)
@@ -83,7 +83,7 @@ The process follows these steps:
 2. **File Reading**: Parse the entire components.json file
 3. **Data Extraction**: For each operator in the JSON:
    - Create a TimingModel instance
-   - Extract latency, delay, and port timing data, with recursive calls to an overloaded fromJSON function
+   - Extract latency, delay, and port timing data, with appropriate calls to an overloaded fromJSON function (example for BitwidthDepMetric [here](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373) )
    - Handle bitwidth-dependent values appropriately
    - Insert the completed model into the TimingDatabase
 
@@ -94,9 +94,9 @@ The JSON parsing handles the nested structure automatically, converting string k
 The TimingDatabase provides several getter methods:
 
 - **[getLatency()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114)**: Returns cycle count for an operation
-- **getInternalDelay()**: Gets processing delay excluding ports
-- **getPortDelay()**: Gets delay for specific input/output ports  
-- **getTotalDelay()**: Sums all relevant delays for an operation path
+- **[getInternalDelay()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L143)**: Gets processing delay excluding ports
+- **[getPortDelay()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L161)**: Gets delay for specific input/output ports  
+- **[getTotalDelay()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L183)**: Sums all relevant delays for an operation path
 
 These methods automatically handle bitwidth lookup and return the appropriate timing value for the requested operation and signal type.
 
