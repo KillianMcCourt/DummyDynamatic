@@ -10,7 +10,7 @@ For hardware circuits to function correctly, every operator needs two key timing
 
 - **Delay**: The actual time (in microseconds) between the arrival of a signal, and the availability of the corresponding output. We track several types:
   - **Single signal type delays**: Time taken within a port/component to compute the output. We consider data delays within this case, as well as the "ready" and "valid" delays internal to a port/component.
-  - **Cross signal type delays**: Time from the propagation of handshaking signals from one singal to another of a different type. five of these are supported : 
+  - **Cross signal type delays**: Time from the propagation of handshaking signals from one signal to another of a different type. five of these are supported : 
     - VR ( valid to ready), CV (control to valid), CR (control to ready), VC (valid to control), VD (valid to data)
 
  
