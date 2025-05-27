@@ -11,7 +11,7 @@ For hardware circuits to function correctly, every operator needs two key timing
 - **Delay**: The actual time (in microseconds) for an operator to compute its result. We track several types:
   - **Port-to-port delays**: Time from input port to output port between control and data signals, which can be:
     - VR ( valid to ready), CV (clock to valid), CR (clock to ready), VC (valid to clock), VD (valid to data)
-  - **Port-specific delays**: Individual timing for input and output ports
+  - **Port-specific delays**: Individual timing for input and output ports themselves
   - **Internal combinational delays**: Between different signal types within the operator
 ## Where Timing Data is Stored
 
