@@ -84,7 +84,7 @@ The timing system uses a two-level hierarchy:
 
 **[TimingModel](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L103)**: Contains all timing data for a single operation
 - Stores latency, delays, and port information
-- Uses BitwidthDepMetric for bitwidth-dependent values
+- Uses BitwidthDepMetric (see next) for bitwidth-dependent values
 - Contains nested PortModel structures for input/output timing
 
 - TimingModels must handle bitwidth-dependent data. For this, a specific struc is used :
