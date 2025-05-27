@@ -10,7 +10,7 @@ For hardware circuits to function correctly, every operator needs two key timing
 
 - **Delay**: The actual time (in microseconds) between the arrival of a signal, and the availability of the corresponding output. We track several types:
   - **Port-to-component and component-to-port delays**: Time from the propagation of handshaking signals from one port to the component, or vice-versa. We consider five such signals, listed below : 
-    - VR ( valid to ready), CV (clock to valid), CR (clock to ready), VC (valid to clock), VD (valid to data)
+    - VR ( valid to ready), CV (control to valid), CR (control to ready), VC (valid to control), VD (valid to data)
   - **Port/Component delays**: Time taken within a port/component to compute the output. We consider data delays within this case, as well as the "ready" and "valid" delays internal to a port/component.
   - **Internal combinational delays**: Between different signal types within the operator
 
