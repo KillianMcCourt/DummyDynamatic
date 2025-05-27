@@ -9,10 +9,10 @@ For hardware circuits to function correctly, every operator needs two key timing
 - **Latency**: The number of clock cycles an operator takes to produce output from input data (always an integer). Essential for keeping data synchronized across different paths.
 
 - **Delay**: The actual time (in microseconds) for an operator to compute its result. We track several types:
-  - Operator delay: Processing time not including internal registers
-  - Handshake delays: Time for valid/ready signals in transactions  
-  - Internal combinational delay: Maximum delay between internal registers (defines max frequency)
-
+  - **Port-to-port delays**: Time from input port to output port between control and data signals, which can be:
+    - VR ( valid to ready), CV (clock to valid), CR (clock to ready), VC (valid to clock), VD (valid to data)
+  - **Port-specific delays**: Individual timing for input and output ports
+  - **Internal combinational delays**: Between different signal types within the operator
 ## Where Timing Data is Stored
 
 All timing information lives in the [components JSON file](https://github.com/EPFL-LAP/dynamatic/blob/main/data/components.json). Here's what a typical entry looks like:
@@ -35,10 +35,13 @@ All timing information lives in the [components JSON file](https://github.com/EP
         "1": 1.4
       },
       "VR": 1.409,
-      "CV": 0
+      "CV": 0,
+      "CR": 0,
+      "VC": 0,
+      "VD": 0
     },
     "inport": { /* port-specific delays, structured like the delay set above */ },
-    "outport": { /* port-specific delays */ }
+    "outport": { /* port-specific delays, structured like the delay set above  */ }
   }
 }
 ```
