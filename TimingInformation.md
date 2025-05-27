@@ -9,15 +9,24 @@ For hardware circuits to function correctly, every operator needs two key timing
 - **Latency**: The number of clock cycles an operator takes to produce output from input data (always an integer). Essential for keeping data synchronized across different paths.
 
 - **Delay**: The actual time (in microseconds) between the arrival of a signal, and the availability of the corresponding output. We track several types:
-  - **Port-to-component and component-to-port delays**: Time from the propagation of handshaking signals from one port to the component, or vice-versa. We consider five such signals, listed below : 
+  - **Single signal type delays**: Time taken within a port/component to compute the output. We consider data delays within this case, as well as the "ready" and "valid" delays internal to a port/component.
+  - **Cross signal type delays**: Time from the propagation of handshaking signals from one singal to another of a different type. five of these are supported : 
     - VR ( valid to ready), CV (control to valid), CR (control to ready), VC (valid to control), VD (valid to data)
-  - **Port/Component delays**: Time taken within a port/component to compute the output. We consider data delays within this case, as well as the "ready" and "valid" delays internal to a port/component.
-  - **Internal combinational delays**: Between different signal types within the operator
 
-For a visual aid in distinguishing these delays, the reader may consider the following graph:
+ 
+  **An important point** is that there is a major distinction between **pipelined** and **non-pipelined** operations. Consider the following graph :
+
+  ![image](https://github.com/user-attachments/assets/5fa5df02-ac2e-4930-a88e-137c821716a9)
 
 
-  ![image](https://github.com/user-attachments/assets/4a9f7e91-9957-4561-b52f-1f495b1dc8b4)
+In the pipelined (or latency > 0) case, for any signal (data or handshaking like valid, ready, control), an inport and outport are used, but the internal delay is covered by the registers; therefore the delay to be accounted for is that of the ports.
+
+In the non-pipelined case, no ports are needed, and the delays to be accounted for are those of the operator itself.
+
+Note : This documentation is based on our understanding of the codebase, however we are not its original authors and can only speculate on the intended usage of the ports. This is because the current code does not seem actually use the data parsed from the storage that relates to the port models; and furthermore all the port delays are 0 for all listed components. 
+
+
+
 
 ## Where Timing Data is Stored
 
