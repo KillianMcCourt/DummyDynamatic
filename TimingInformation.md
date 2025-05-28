@@ -19,7 +19,9 @@ For hardware circuits to function correctly, every operator needs two key timing
   ![image](https://github.com/user-attachments/assets/5fa5df02-ac2e-4930-a88e-137c821716a9)
 
 
-In the pipelined (or latency > 0) case, for any signal (data or handshaking like valid, ready, control), an inport and outport are used, but the internal delay is covered by the registers; therefore the delay to be accounted for is that of the ports.
+Please note that this disntiction is not made explicit in the code, but serves to understand the pratical cases that occur in the operators.
+
+In the pipelined (or latency > 0) case, for any signal (data or handshaking like valid, ready, control), an inport and outport are used, but the internal delay is covered by the registers; therefore in pratice the delay to be accounted for is that of the ports - though the code allows for the possibility of a non-zero operator delay even in this case.
 
 In the non-pipelined case, no ports are needed, and the delays to be accounted for are those of the operator itself.
 
