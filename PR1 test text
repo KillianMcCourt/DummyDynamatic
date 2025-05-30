@@ -4,7 +4,7 @@ This PR corresponds to the described changes as PR1 of issue [#457](https://gith
 
 ![Image](https://github.com/user-attachments/assets/7aa06237-ca44-48b9-90a9-870ec21e94dd)
 
-This first PR focuses on changes to the implementation of the JSON and the latency extraction, but leaves the IR and the unit generation untouched.
+This first PR focuses on changes to the implementation of the JSON and the latency extraction, but leaves the IR and the backend unit generation untouched.
 
 # Motivation
 
@@ -24,9 +24,117 @@ This limitation is built in three places of the timing information :
 3 - the timingModel, which is built to store this structure, and whose getter logic depends on it.
 
 
+
 # Assumptions 
 
+The updated code will expect that the provided map only includes pareto-optimal delay : latency pairs, otherwise sub-optimal values may be selected.
+
+# Implementation
 
 
-# Implementatoi
+## Expanding  ```components.json```  
+
+
+
+In order to expand the structure of ```components.json``` representing latency, we have to understand the current structure.
+
+
+
+The current structure for latency value is the following:
+
+
+
+```
+
+
+
+  "MLIR_OP": {
+
+    "latency": {
+
+      "BITWIDTH": LATENCY_VALUE
+
+    },
+
+
+
+```
+
+
+
+where ```MLIR_OP``` is the name fo the MLIR operation, ```BITWIDTH``` correponds to the bitwidth of the operation, and ```LATENCY_VALUE``` is the value of the latency for the specific MLIR operation with the specific bitwidth value. A concrete example for the operation ```add.f``` is the following: 
+
+
+
+```
+
+
+
+  "handshake.addf": {
+
+    "latency": {
+
+      "64": 9.0
+
+    },
+
+
+Therefore, our approach will update the latency field to a map of maps, where the bitwidth will be the keys of the outer map; and delays keys of the inner map, with latency values being the data. This yields :
+
+
+
+```
+
+
+
+  "MLIR_OP": {
+
+    "latency": {
+
+      "BITWIDTH": {
+
+        "INTERNAL_COMB_DELAY_1": LATENCY_VALUE_1,
+
+        "INTERNAL_COMB_DELAY_2": LATENCY_VALUE_2
+
+      },
+
+    },
+
+
+
+```
+
+
+
+where ```INTERNAL_COMB_DELAY_1``` and ```INTERNAL_COMB_DELAY_2``` represent the maximum internal combinational delay between two registers of two different implementation of the same MLIR operation with the same bitwidth. These values correspond to the delay of the combinational logic of the figure. For instance, the updated structure for ```addf``` is the following:
+
+
+
+
+
+```
+
+
+
+  "handshake.addf": {
+
+    "latency": {
+
+      "64": {
+
+          "1.3" : 7.0
+
+          "0.9": 9.0
+
+      },
+
+    },
+
+
+
+```
+
+
+
 
