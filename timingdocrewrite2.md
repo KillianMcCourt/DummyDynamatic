@@ -39,7 +39,7 @@ We classify combinational delays into two categories:
 This difference is a key distinction between **pipelined** and **non-pipelined** operations. Consider the following graph :
 
 
-![image](https://github.com/user-attachments/assets/277f6858-01bd-415e-86a6-3bf73d9d695b)
+![image](https://github.com/user-attachments/assets/2b098eb2-4f54-40a5-a712-8511fbf2ab98)
 
 
 
@@ -226,6 +226,11 @@ The timing system uses a two-level hierarchy:
 - Contains nested `PortModel` structures for port2reg delay information. 
 
 
+**[PortModel](https://github.com/KillianMcCourt/dynamatic/blob/pr1-clean/include/dynamatic/Support/TimingModels.h#L152)** : Nested structure representing a port. A timing model will generally have two, for inport and outport.
+
+-this structure contains three fields : data, valid and ready delays.
+
+
 
 Since many timing characteristics depend on operand bitwidth, a dedicated structure is used:
 
@@ -240,8 +245,6 @@ Since many timing characteristics depend on operand bitwidth, a dedicated struct
 
 
 
-
-**TODO: Talk about PortModel**
 
 
 
@@ -261,19 +264,22 @@ The process follows these steps:
 
    - Create a TimingModel instance
 
-   - Extract latency, delay, and port timing data, with appropriate calls to an overloaded fromJSON function (example for BitwidthDepMetric [here](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373) )
+   - Extract latency, delay, and port timing data, with appropriate calls to an overloaded fromJSON function (example for BitwidthDepMetric [here](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373) ). PortModels are handled seperately, but in identical fashion (see it's dedicated [overload](https://github.com/KillianMcCourt/dynamatic/blob/pr1-clean/lib/Support/TimingModels.cpp#L426)  ). 
 
    - Handle bitwidth-dependent values appropriately
 
    - Insert the completed model into the TimingDatabase
+  
 
 
 
-The JSON parsing handles the nested structure automatically, converting string keys to bitwidths and organizing delay values by signal type.
+
+
+The JSON parsing handles the nested structure automatically, converting string keys to bitwidths and organizing delay values by signal type. 
 
 
 
-## Accessing Timing Information
+##  Core Functions of Data structures
 
 
 
