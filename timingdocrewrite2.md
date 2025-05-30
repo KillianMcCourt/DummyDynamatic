@@ -283,17 +283,17 @@ The JSON parsing handles the nested structure automatically, converting string k
 
 
 
-The TimingDatabase provides several getter methods:
+The TimingDatabase provides several getter methods, all of the LogicalResult type (returns a boolean success or failure state, and passes desired information back as a reference) :
 
 
 
-- **[getLatency()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114)**: Returns cycle count for an operation
+- **[getLatency(Operation *op, SignalType signalType, double &latency)](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L114)**: passes back latency as unsigned cycle count for an operation of a given signal type.
 
-- **[getInternalDelay()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L143)**: Gets processing delay excluding ports
+- **[getInternalDelay(Operation *op, SignalType signalType, double &latency)](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L143)**: passes back processing delay as a double (in microseconds), excluding ports.
 
-- **[getPortDelay()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L161)**: Gets delay for specific input/output ports  
+- **[getPortDelay(Operation *op, SignalType signalType, double &latency)](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L161)**: passes back delay as a double for specific input/output ports  
 
-- **[getTotalDelay()](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L183)**: Sums all relevant delays for an operation path
+- **[getTotalDelay(Operation *op, SignalType signalType, double &latency)](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L183)**: passes back the sum (as a double) of all relevant delays for an operation path, by adding internal and port delays.
 
 
 
