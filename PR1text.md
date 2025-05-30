@@ -68,11 +68,7 @@ The current structure for latency value is the following:
 
 
 
-where ```MLIR_OP``` is the name fo the MLIR operation, ```BITWIDTH``` correponds to the bitwidth of the operation, and ```LATENCY_VALUE``` is the value of the latency for the specific MLIR operation with the specific bitwidth value. A concrete example for the operation ```add.f``` is the following: 
-
-
-
-
+where ```MLIR_OP``` is the name fo the MLIR operation, ```BITWIDTH``` correponds to the bitwidth of the operation, and ```LATENCY_VALUE``` is the value of the latency for the specific MLIR operation with the specific bitwidth value.
 
 
 Therefore, our approach will update the latency field to a map of maps, where the bitwidth will be the keys of the outer map; and delays keys of the inner map, with latency values being the data. This yields :
@@ -111,11 +107,7 @@ where ```INTERNAL_COMB_DELAY_1``` and ```INTERNAL_COMB_DELAY_2``` represent the 
 ### Adding a new data structure
 
 
-
 The current JSON file uses bitwidth values as keys to distinguish between different implementations of the same MLIR operation. This design choice closely reflects the underlying data structure used to store this information. Specifically, for each distinct timing entry, the ```TimingModel``` contains a [```BitwidthDepMetric```](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L46) structure. This structure organizes the data as a map, where the keys are unsigned integers representing bitwidth values and the values are the different timing information (i.e., latency, operator-wide delay). In the code, [```latency```](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L115) and [```dataDelay```](https://github.com/EPFL-LAP/dynamatic/blob/main/include/dynamatic/Support/TimingModels.h#L117) are two examples. However, ```BitwidthDepMetric``` is generic enough to allow any possible value type. For this reason, we re-use the same data structure for our implementation.
-
-
-
 
 
 
@@ -193,6 +185,11 @@ An important aspect is the selection of the operation latency. Since the main pa
 
 
 We receive as input of the buffer placement the desired operating frequency of the circuit. Additionally, for each operation we know the needed bitwidth. Hence, we find the best matching latency considering the bitwidth and internal combinational delays specified for each operation. The best matching latency is identified using ```getCeilMetric``` (for bitwidth) and ```CombDelayDepMetric``` (for internal combinational delays). For latency, these functions are to be run sequentially : first, ```getCeilMetric``` extracts the <delay:latency> map at the correct latency, then ```CombDelayDepMetric``` extracts from this map the desired latency.
+
+The logic is essentially identical to the current getCeil, and can be visualised as :
+
+![image](https://github.com/user-attachments/assets/472fb356-0cf5-4735-abf8-b1251d8e33a9)
+
 
 
 
