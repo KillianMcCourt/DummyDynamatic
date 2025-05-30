@@ -8,32 +8,34 @@ This first PR focuses on changes to the implementation of the JSON and the laten
 
 # Motivation
 
-The current Dynamatic HLS tool assumes each pipelined operation has a single, fixed-latency implementation. 
+The current Dynamatic HLS tool assumes each pipelined operation has a single, fixed-latency implementation.
 
-This means that the current system has no way of :
+This limitation is built in three places of the timing information:
 
+- **components.json**
+  - Only lists `bitwidth:latency` pairs, without dependency on delay.
 
-1 - storing internal combinational delays
+- **Parsing logic**
+  - Expects the latency field to be a list of such pairs.
 
-2 - returning the correct latency associated with such a delay
+- **TimingModel**
+  - Built to store this structure.
+  - Getter logic depends on this structure.
 
-This matters because the maximum frequency of a circuit is at most that of the slowest multi-cycle operator, and speed-area tradeoffs along the pareto-frontier are standard in FPGA design.
+This means the current system has no way of:
 
-This limitation is built in three places of the timing information :
+- Storing internal combinational delays.
+- Returning the correct latency associated with such a delay.
 
+This matters because:
 
-1- the components.json, which only lists bitwidth:latency pairs, without dependency on delay. 
-
-2 - the parsing logic, which expects the latency field to be a list of such pairs
-
-3 - the timingModel, which is built to store this structure, and whose getter logic depends on it.
-
-
+- The maximum frequency of a circuit is limited by the slowest multi-cycle operator.
+- Speed-area tradeoffs along the Pareto frontier are standard in FPGA design.
 
 
 # Assumptions 
 
-The updated code will expect that the provided map only includes pareto-optimal delay : latency pairs, otherwise sub-optimal values may be selected.
+TODO : I remember you had mentionned this part in particular, but i don't remember what you had said should go here.
 
 # Implementation
 
@@ -102,7 +104,7 @@ Therefore, our approach will update the latency field to a map of maps, where th
 
 where ```INTERNAL_COMB_DELAY_1``` and ```INTERNAL_COMB_DELAY_2``` represent the maximum internal combinational delay between two registers of two different implementation of the same MLIR operation with the same bitwidth. These values correspond to the delay of the combinational logic of the figure. 
 
-**Please note that for now, the delay values will be chosen realistically, but the latencies listed will be fixed at those of the current ilmplementation in backend, to avoid inducing performance reductions. This will be replaced with the correct values in the upcoming backend PR.**
+**Please note that for now, the delay values will be chosen realistically, but the latencies listed will be fixed at those of the current ilmplementation in backend, to avoid inducing performance reductions. This will be replaced with the correct values in an upcoming backend PR.**
 
 ### Adding a new data structure
 
@@ -218,7 +220,7 @@ Current value is :
 
     },
 
-
+```
 
 the updated structure for ```addf``` is the following:
 
@@ -241,6 +243,9 @@ the updated structure for ```addf``` is the following:
     },
 
 ```
+
+
+
 
 Note that as mentionned above, I list the same latency for all delays, in order to ensure consistency with the unaltered backend. 
 
