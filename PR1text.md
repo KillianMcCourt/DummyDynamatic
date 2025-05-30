@@ -172,7 +172,25 @@ Each timing model's data fields are then filled one by one,  by deserialising th
 
 Deserialisation makes use of a function ```fromJSON```. This function takes a reference to the field, and writes the data back into it. Since several field types exist, it has several overloads (currently, for double ( and [BitwdithDepMetric<double>](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L283) ).
 
-Since our change involves changing the type of the latency field to a new one (BitwdithDepMetric<CombDelayDepMetric<double>>) , we add an overload to handle it.
+Since our change involves changing the type of the latency field to a new one (BitwdithDepMetric<CombDelayDepMetric<double>>) , we add an overload to handle it - it will instantiate a DelayDepmetric struct for every bitwidth, and store the corresponding map into the struct's data field.
+
+Pseudo-code for this overload is :
+
+```
+
+For each (bitwidthKey, metricValue) in JSON object:
+  Parse bitwidthKey → bitwidth
+  Create empty LatencyMap
+
+  For each (doubleKey, doubleValue) in nested metricValue object:
+    Parse doubleKey → delay
+    Parse doubleValue → latency
+    LatencyMap[delay] = latency
+
+  Create DelayDepMetric with LatencyMap
+  metric[bitwidth] = DelayDepMetric
+
+```
 
 
 
