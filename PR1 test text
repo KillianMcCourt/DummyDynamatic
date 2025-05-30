@@ -1,0 +1,7 @@
+# Summary
+
+This PR corresponds to the described changes of PR0 and PR1 of issue [#457](https://github.com/EPFL-LAP/dynamatic/issues/457). 
+
+
+- It adds documentation for the timing information.
+- It updates the JSON to support the internal combinational delay information. Since the backend changes will be part of a later PR, for now the information is placeholder, having been chosen such that the data available in Dynamatic runs will not be changed by the push.
