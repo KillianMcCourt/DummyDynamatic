@@ -200,11 +200,11 @@ For each (bitwidthKey, metricValue) in JSON object:
 
 
 
-An important aspect is the selection of the operation latency. Since the main pass that interacts with timing information is the buffer placement pass, we select the latency of the pipelined operations (and the implementation) in this step.
+The main point of this entire PR is to allow the various algorithms to obtain the latency corresponding to a chosen implementation. In order to avoid tying this choice to any specific part of the run, we instead implement simple logic, called as part of getLatency calls, which will consistently return the same latency choice. it is as follows : 
 
 
 
-We receive as input of the buffer placement the desired operating frequency of the circuit. Additionally, for each operation we know the needed bitwidth. Hence, we find the best matching latency considering the bitwidth and internal combinational delays specified for each operation. The best matching latency is identified using ```getCeilMetric``` (for bitwidth) and ```CombDelayDepMetric``` (for internal combinational delays). For latency, these functions are to be run sequentially : first, ```getCeilMetric``` extracts the <delay:latency> map at the correct latency, then ```CombDelayDepMetric``` extracts from this map the desired latency.
+We receive as input of the buffer placement the desired operating frequency of the circuit. Additionally, for each operation we know the needed bitwidth (through usage of the current getCeilMetric function). Hence, we find the best matching latency considering the bitwidth and internal combinational delays specified for each operation. The best matching latency is identified using ```getCeilMetric``` (for bitwidth) and ```CombDelayDepMetric``` (for internal combinational delays). For latency, these functions are to be run sequentially : first, ```getCeilMetric``` extracts the <delay:latency> map at the correct latency, then ```CombDelayDepMetric``` extracts from this map the desired latency.
 
 The logic is essentially identical to the current getCeil, and can be visualised as :
 
