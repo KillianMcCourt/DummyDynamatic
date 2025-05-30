@@ -1,7 +1,30 @@
 # Summary
 
-This PR corresponds to the described changes of PR0 and PR1 of issue [#457](https://github.com/EPFL-LAP/dynamatic/issues/457). 
+This PR corresponds to the described changes as PR1 of issue [#457](https://github.com/EPFL-LAP/dynamatic/issues/457). The objective is to lay groundwork necessary to support units that vary in both latency and internal operating frequency - since this frequency is defined by the internal combinational delay, we will focus on the handling of this "delay" going forwards. See the following figure for an illustration of the difference between this delay and the already-supported operator-wide delay : 
+
+![Image](https://github.com/user-attachments/assets/7aa06237-ca44-48b9-90a9-870ec21e94dd)
+
+This first PR focuses on changes to the implementation of the JSON and the latency extraction, but leaves the IR and the unit generation untouched.
+
+# Motivation
+
+The current Dynamatic HLS tool assumes each pipelined operation has a single, fixed-latency implementation. 
+
+This means that the current system has no way of :
+
+1 - storing internal combinational delays
+2 - returning the correct latency associated with such a delay
 
 
-- It adds documentation for the timing information.
-- It updates the JSON to support the internal combinational delay information. Since the backend changes will be part of a later PR, for now the information is placeholder, having been chosen such that the data available in Dynamatic runs will not be changed by the push.
+This limitation is built in three places of the timing information :
+
+1- the components.json, which only lists bitwidth:latency pairs, without dependency on delay. 
+2 - the parsing logic, which expects the latency field to be a list of such pairs
+3 - the timingModel, which is built to store this structure, and whose getter logic depends on it.
+
+
+
+
+
+# Assumptions 
+
