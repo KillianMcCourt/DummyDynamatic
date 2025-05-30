@@ -15,6 +15,7 @@ This means that the current system has no way of :
 1 - storing internal combinational delays
 2 - returning the correct latency associated with such a delay
 
+This matters because the maximum frequency of a circuit is at most that of the slowest multi-cycle operator, and speed-area tradeoffs along the pareto-frontier are standard in FPGA design.
 
 This limitation is built in three places of the timing information :
 
@@ -23,8 +24,9 @@ This limitation is built in three places of the timing information :
 3 - the timingModel, which is built to store this structure, and whose getter logic depends on it.
 
 
-
-
-
 # Assumptions 
+
+
+
+# Implementatoi
 
