@@ -12,16 +12,22 @@ The current Dynamatic HLS tool assumes each pipelined operation has a single, fi
 
 This means that the current system has no way of :
 
+
 1 - storing internal combinational delays
+
 2 - returning the correct latency associated with such a delay
 
 This matters because the maximum frequency of a circuit is at most that of the slowest multi-cycle operator, and speed-area tradeoffs along the pareto-frontier are standard in FPGA design.
 
 This limitation is built in three places of the timing information :
 
+
 1- the components.json, which only lists bitwidth:latency pairs, without dependency on delay. 
+
 2 - the parsing logic, which expects the latency field to be a list of such pairs
+
 3 - the timingModel, which is built to store this structure, and whose getter logic depends on it.
+
 
 
 
