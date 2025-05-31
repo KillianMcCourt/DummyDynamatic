@@ -39,7 +39,7 @@ We classify combinational delays into two categories:
 This difference is a key distinction between **pipelined** and **non-pipelined** operations. Consider the following graph :
 
 
-![image](https://github.com/user-attachments/assets/2b098eb2-4f54-40a5-a712-8511fbf2ab98)
+![image](https://github.com/user-attachments/assets/b78d159b-25d4-4681-8d5a-19a9bd59bfb3)
 
 
 
