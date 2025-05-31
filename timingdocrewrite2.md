@@ -225,7 +225,7 @@ The timing system uses a two-level hierarchy:
 - Contains nested `PortModel` structures for port2reg delay information. 
 
 
-**[PortModel](https://github.com/KillianMcCourt/dynamatic/blob/pr1-clean/include/dynamatic/Support/TimingModels.h#L152)** : Nested structure representing a port. A timing model will generally have two, for inport and outport.
+**[PortModel](https://github.com/KillianMcCourt/dynamatic/blob/pr1-clean/include/dynamatic/Support/TimingModels.h#L152)** : Nested structure which serves to store relevevant port-to-register delays. A timing model will generally have two, for inport and outport.
 
 -this structure contains three fields : data, valid and ready delays.
 
@@ -249,10 +249,15 @@ Since many timing characteristics depend on operand bitwidth, a dedicated struct
 
 ## Loading Timing Data from JSON
 
+Before detailing the process, an introduction of the main functions involved is required :
+
+```fromJSON((const ljson::Value &jsonValue, T &target, ljson::Path path)``` : this is the primary function used, with a number of overloads for various T object types. These overloads are, in order :  [first called](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373) on the TimingDatabase, then [on every](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L330) TimingModel inside the Database, then on individual fields(example for BitwidthDepMetric [here](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373) ); PortModels also have a dedicated[overload](https://github.com/KillianMcCourt/dynamatic/blob/pr1-clean/lib/Support/TimingModels.cpp#L426) .
+
+
+[```deserializenested((ArrayRef<std::string> keys, const ljson::Object *object, T &out, ljson::Path path)```](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L256): this function is called by the TimingModel fromJSON. It calls the ```fromJSON(*value, out, currentPath)```   for the inidividual fields, by iterating across the path provided by the ```TimingModel```-level ```fromJSON```. Therefore, it handles the deserialisation of said fields, by passing back the object deserialized. 
 
 
 The process follows these steps:
-
 
 
 1. **Initialization**: Create empty TimingDatabase
@@ -263,16 +268,11 @@ The process follows these steps:
 
    - Create a TimingModel instance
 
-   - Extract latency, delay, and port timing data, with appropriate calls to an overloaded fromJSON function (example for BitwidthDepMetric [here](https://github.com/EPFL-LAP/dynamatic/blob/main/lib/Support/TimingModels.cpp#L373) ). PortModels are handled seperately, but in identical fashion (see it's dedicated [overload](https://github.com/KillianMcCourt/dynamatic/blob/pr1-clean/lib/Support/TimingModels.cpp#L426)  ). 
-
+   - Extract latency, delay, and port timing data, with appropriate calls to a fromJSON function . 
    - Handle bitwidth-dependent values appropriately
 
    - Insert the completed model into the TimingDatabase
   
-
-
-
-
 
 The JSON parsing handles the nested structure automatically, converting string keys to bitwidths and organizing delay values by signal type. 
 
