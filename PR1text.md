@@ -35,7 +35,10 @@ This matters because:
 
 # Assumptions 
 
-TODO : I remember you had mentionned this part in particular, but i don't remember what you had said should go here.
+This PR makes 2 assumptions :
+
+  - that any further components added be added with the new format (see below) - a placeholder delay of 0.0 can be used
+  - that any TimingDatabase::getLatency call will now provide TargetCP as an argument
 
 # Implementation
 
@@ -200,13 +203,10 @@ For each (bitwidthKey, metricValue) in JSON object:
 
 
 
-The main point of this entire PR is to allow the various algorithms to obtain the latency corresponding to a chosen implementation. In order to avoid tying this choice to any specific part of the run, we instead implement simple logic, called as part of getLatency calls, which will consistently return the same latency choice. it is as follows : 
+The main objective  of this PR is to allow the various algorithms to obtain the latency corresponding to a chosen implementation. 
 
-
-
-We receive as input of the buffer placement the desired operating frequency of the circuit. Additionally, for each operation we know the needed bitwidth (through usage of the current getCeilMetric function). Hence, we find the best matching latency considering the bitwidth and internal combinational delays specified for each operation. The best matching latency is identified using ```getCeilMetric``` (for bitwidth) and ```CombDelayDepMetric``` (for internal combinational delays). For latency, these functions are to be run sequentially : first, ```getCeilMetric``` extracts the <delay:latency> map at the correct latency, then ```CombDelayDepMetric``` extracts from this map the desired latency.
-
-The logic is essentially identical to the current getCeil, and can be visualised as :
+The selection logic works as follows: given the target operating frequency, we find the best matching latency by running two functions sequentially. First, getCeilMetric extracts the appropriate delay:latency map based on bitwidth requirements. Then, CombDelayDepMetric selects the optimal latency from this map based on combinational delay constraints.
+This approach ensures consistent latency choices across all getLatency calls without tying the selection to any specific part of the run.
 
 ![image](https://github.com/user-attachments/assets/472fb356-0cf5-4735-abf8-b1251d8e33a9)
 
